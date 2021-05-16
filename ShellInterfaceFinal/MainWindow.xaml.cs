@@ -194,7 +194,7 @@ namespace ShellInterfaceFinal
                 bytesread = stream.Read(resp, 0, resp.Length);
             }
 
-            string response = Encoding.GetEncoding(1252).GetString(memStream.ToArray());
+            string response = Encoding.Unicode.GetString(memStream.ToArray());
             lblPrompt.Content = response;
         }
     }
