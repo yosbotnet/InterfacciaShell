@@ -163,5 +163,32 @@ namespace ShellInterfaceFinal
             processoCmd.StandardInput.WriteLine(comando + "\r\n");
 
         }
+        private void btnDisconnect_Click(object sender, RoutedEventArgs e)
+        {
+            connect.Close();
+            btnInvia.IsEnabled = false;
+            btnAscolta.IsEnabled = true;
+        }
+        private void btnInvia_Click(object sender, RoutedEventArgs e)
+        {
+            //stream.ReadTimeout = 5000;
+            byte[] comando = Encoding.ASCII.GetBytes(txtComando.Text + "\r\n");
+            stream.Write(comando, 0, comando.Length);
+            byte[] resp = new byte[2048];
+            var memStream = new MemoryStream();
+            int bytesread = stream.Read(resp, 0, resp.Length);
+            while (bytesread > 0)
+            {
+                memStream.Write(resp, 0, bytesread);
+                Thread.Sleep(20);
+                resp = new byte[2048];
+                if (bytesread != 2048)
+                    break;
+                bytesread = stream.Read(resp, 0, resp.Length);
+            }
+
+            string response = Encoding.GetEncoding(1252).GetString(memStream.ToArray());
+            lblPrompt.Content = response;
+        }
     }
 }
