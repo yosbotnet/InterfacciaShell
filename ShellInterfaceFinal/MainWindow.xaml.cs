@@ -28,8 +28,10 @@ namespace ShellInterfaceFinal
         public MainWindow()
         {
             InitializeComponent();
+            btnDisconnect.IsEnabled = false;
+            btnInvia.IsEnabled = false;
         }
-        Socket corrente;
+        #region variabili
         TcpClient connect;
         TcpListener server;
         NetworkStream stream;
@@ -37,17 +39,17 @@ namespace ShellInterfaceFinal
         static StreamWriter outStream;
         static StreamReader inStream;
         static StreamWriter toCmd;
-        static StreamReader fromCmd;
+        #endregion
         private void btnConnect_Click(object sender, RoutedEventArgs e)
         {
             try
             {
+                //connect & get stream
                 IPAddress ipDest = IPAddress.Parse(txtIP.Text);
                 int port = int.Parse(txtPorta.Text);
                 IPEndPoint ipEP = new IPEndPoint(ipDest, port);
                 connect = new TcpClient();
                 connect.Connect(ipEP);
-
                 stream = connect.GetStream();
 
             }
@@ -110,7 +112,7 @@ namespace ShellInterfaceFinal
             {
                 Thread.Sleep(50);
             }
-            //MessageBox.Show("Exited! Connecting");
+            //finisco di impostare il processo cmd
             Socket ascolto = server.AcceptSocket();
             processoCmd.Start();
             toCmd = processoCmd.StandardInput;
@@ -120,11 +122,13 @@ namespace ShellInterfaceFinal
             {
                 //leggo il comando
                 comando = null;
+                //imposto gli stream
                 stream = new NetworkStream(ascolto);
                 inStream = new StreamReader(stream);
                 outStream = new StreamWriter(stream);
                 toCmd.AutoFlush = true;
                 outStream.AutoFlush = true;
+                //leggo continuamente
                 int i;
                 while ((i = stream.Read(bufferC, 0, bufferC.Length)) != 0)
                 {
@@ -134,6 +138,7 @@ namespace ShellInterfaceFinal
 
 
                 }
+                //per performance
                 Thread.Sleep(50);
             }
             ascolto.Close();
@@ -161,7 +166,6 @@ namespace ShellInterfaceFinal
         public void Esegui(string comando)
         {
             processoCmd.StandardInput.WriteLine(comando + "\r\n");
-
         }
         private void btnDisconnect_Click(object sender, RoutedEventArgs e)
         {
@@ -171,10 +175,12 @@ namespace ShellInterfaceFinal
         }
         private void btnInvia_Click(object sender, RoutedEventArgs e)
         {
-            //stream.ReadTimeout = 5000;
+            stream.ReadTimeout = 15000;
+            //invio il comando in byte
             byte[] comando = Encoding.ASCII.GetBytes(txtComando.Text + "\r\n");
             stream.Write(comando, 0, comando.Length);
             byte[] resp = new byte[2048];
+            //nel memorystream scriverò il risultato
             var memStream = new MemoryStream();
             int bytesread = stream.Read(resp, 0, resp.Length);
             while (bytesread > 0)
@@ -182,6 +188,7 @@ namespace ShellInterfaceFinal
                 memStream.Write(resp, 0, bytesread);
                 Thread.Sleep(20);
                 resp = new byte[2048];
+                //se non è arrivato il numero massimo di byte, esco
                 if (bytesread != 2048)
                     break;
                 bytesread = stream.Read(resp, 0, resp.Length);
