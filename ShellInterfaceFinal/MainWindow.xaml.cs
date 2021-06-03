@@ -51,7 +51,25 @@ namespace ShellInterfaceFinal
                 connect = new TcpClient();
                 connect.Connect(ipEP);
                 stream = connect.GetStream();
+                byte[] resp = new byte[2048];
+                //nel memorystream scriverò il risultato
+                var memStream = new MemoryStream();
+                int bytesread = stream.Read(resp, 0, resp.Length);
+                while (bytesread > 0)
+                {
+                    memStream.Write(resp, 0, bytesread);
+                    Thread.Sleep(100);
+                    resp = new byte[2048];
+                    //se non è arrivato il numero massimo di byte, esco
+                    
+                    if (!stream.DataAvailable)
+                        break;
+                    bytesread = stream.Read(resp, 0, resp.Length);
+                }
 
+                string response = Encoding.ASCII.GetString(memStream.ToArray());
+                memStream.Close();
+                lblPrompt.Content = response;
             }
             catch (Exception ex)
             {
