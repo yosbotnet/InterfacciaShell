@@ -204,10 +204,10 @@ namespace ShellInterfaceFinal
             while (bytesread > 0)
             {
                 memStream.Write(resp, 0, bytesread);
-                Thread.Sleep(20);
+                Thread.Sleep(75);
                 resp = new byte[2048];
                 //se non è arrivato il numero massimo di byte, esco
-                if (bytesread != 2048)
+                if (!stream.DataAvailable)
                     break;
                 bytesread = stream.Read(resp, 0, resp.Length);
             }
