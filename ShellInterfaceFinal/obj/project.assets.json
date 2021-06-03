@@ -8,7 +8,8 @@
     "net5.0-windows7.0": []
   },
   "packageFolders": {
-    "C:\\Users\\ArchUser\\.nuget\\packages\\": {}
+    "C:\\Users\\ArchUser\\.nuget\\packages\\": {},
+    "D:\\DevExpress\\Components\\Offline Packages": {}
   },
   "project": {
     "version": "1.0.0",
@@ -19,8 +20,12 @@
       "packagesPath": "C:\\Users\\ArchUser\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\ArchUser\\Documents\\GitHub\\InterfacciaShell\\ShellInterfaceFinal\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "D:\\DevExpress\\Components\\Offline Packages"
+      ],
       "configFilePaths": [
         "C:\\Users\\ArchUser\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 21.1.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -28,6 +33,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "D:\\DevExpress\\Components\\System\\Components\\Packages": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

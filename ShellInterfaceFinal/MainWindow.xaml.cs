@@ -132,7 +132,7 @@ namespace ShellInterfaceFinal
                 int i;
                 while ((i = stream.Read(bufferC, 0, bufferC.Length)) != 0)
                 {
-                    comando = System.Text.Encoding.ASCII.GetString(bufferC);
+                    comando = Encoding.ASCII.GetString(bufferC);
                     //esegui il comando
                     Esegui(comando);
 
@@ -155,7 +155,7 @@ namespace ShellInterfaceFinal
                 {
                     strOutput.Append(outLine.Data);
                     outStream.WriteLine(strOutput);
-                    outStream.Flush();
+                    //outStream.Flush();
                 }
                 catch (Exception ex)
                 {
@@ -165,7 +165,7 @@ namespace ShellInterfaceFinal
         }
         public void Esegui(string comando)
         {
-            processoCmd.StandardInput.WriteLine(comando + "\r\n");
+            processoCmd.StandardInput.WriteLine(comando);
         }
         private void btnDisconnect_Click(object sender, RoutedEventArgs e)
         {
@@ -194,7 +194,8 @@ namespace ShellInterfaceFinal
                 bytesread = stream.Read(resp, 0, resp.Length);
             }
 
-            string response = Encoding.Unicode.GetString(memStream.ToArray());
+            string response = Encoding.ASCII.GetString(memStream.ToArray());
+            memStream.Close();
             lblPrompt.Content = response;
         }
     }
